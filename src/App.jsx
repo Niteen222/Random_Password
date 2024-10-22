@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import './App.css'
 
 function App() {
@@ -6,6 +6,10 @@ function App() {
   const [allowNumber, setAllowNumber] = useState(false);
   const [allowCharacter, setAllowCharacter] = useState(false);
   const [pass, setPass] = useState("");  
+
+  // ref section
+
+  const passwordRef = useRef(null)
 
   const password_generator = useCallback(() => {
     let password = "";
@@ -25,13 +29,21 @@ function App() {
     password_generator();
   }, [length, allowNumber, allowCharacter, password_generator]);
 
+  const copyPassword = useCallback (()=>{
+    passwordRef.current?.select()
+    window.navigator.clipboard.writeText(pass)
+  },[pass])
+
   return (
     <>
       <h1 className="pass">Password Generator</h1>
       <div className="main">
         <div className="inner">
-          <input type="text" value={pass} placeholder="Password" readOnly className="passinp" />
-          <button className="copy">Copy</button>
+          <input type="text" value={pass} placeholder="Password" readOnly className="passinp" ref={passwordRef}/>
+          <button
+           className="copy"
+           onClick={copyPassword}
+           >Copy</button>
         </div>
         <div className="inner2">
           <div className="input">
